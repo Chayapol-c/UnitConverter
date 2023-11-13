@@ -6,40 +6,30 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import kotlin.math.roundToInt
 
-class UnitConverterViewModel: ViewModel() {
-    private val _inputValue: MutableState<String> = mutableStateOf("")
-    var inputValue = _inputValue
-    private val _outputValue:MutableState<String> = mutableStateOf("")
-    var outputValue = _outputValue
-    private val _inputUnit: MutableState<String> = mutableStateOf("Meters")
-    var inputUnit = _inputUnit
-    private val _outputUnit: MutableState<String> = mutableStateOf("Meters")
-    var outputUnit = _outputUnit
-    private val _iExpanded: MutableState<Boolean> = mutableStateOf(false)
-    var iExpanded = _iExpanded
-    private val _oExpanded: MutableState<Boolean> = mutableStateOf(false)
-    var oExpanded = _oExpanded
-    private val _inputConversionFactor: MutableState<Double> = mutableDoubleStateOf(1.00)
-    private val _outputConversionFactor: MutableState<Double> = mutableDoubleStateOf(1.00)
+class UnitConverterViewModel(private val repository: UnitConverterRepository): ViewModel() {
+
+    private val _inputValue = mutableStateOf(repository.getModel().inputValue)
+    val inputValue = _inputValue
+    private val _outputValue = mutableStateOf(repository.getModel().outputValue)
+    val outputValue = _outputValue
+    private val _inputUnit = mutableStateOf(repository.getModel().inputUnit)
+    val inputUnit = _inputUnit
+    private val _outputUnit = mutableStateOf(repository.getModel().outputUnit)
+    val outputUnit = _outputUnit
+    private val _iExpanded = mutableStateOf(repository.getModel().iExpanded)
+    val iExpanded = _iExpanded
+    private val _oExpanded = mutableStateOf(repository.getModel().oExpanded)
+    val oExpanded = _oExpanded
 
     fun onSelectInputUnit(unit: String, conversionFactor: Double) {
-        _iExpanded.value = false
-        _inputUnit.value = unit
-        _inputConversionFactor.value = conversionFactor
-        convertUnits()
+        repository.onSelectInputUnit(unit, conversionFactor)
     }
 
     fun onSelectOutputUnit(unit: String, conversionFactor: Double) {
-        _oExpanded.value = false
-        _outputUnit.value = unit
-        _outputConversionFactor.value = conversionFactor
-        convertUnits()
+        repository.onSelectOutputUnit(unit, conversionFactor)
     }
 
     fun convertUnits() {
-        val inputValueDouble = _inputValue.value.toDoubleOrNull() ?: 0.0
-        val result =
-            (inputValueDouble * _outputConversionFactor.value!! * 100.0 / _outputConversionFactor.value).roundToInt() / 100.0
-        outputValue.value = result.toString()
+        repository.convertUnits()
     }
 }
