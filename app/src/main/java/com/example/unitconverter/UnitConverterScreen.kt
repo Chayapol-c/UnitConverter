@@ -21,6 +21,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.unitconverter.ui.SelectOption
 
 @Composable
 fun UnitConverterScreen(viewModel: UnitConverterViewModel = viewModel()) {

@@ -1,4 +1,4 @@
-package com.example.unitconverter
+package com.example.unitconverter.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
