@@ -1,4 +1,4 @@
-package com.example.unitconverter
+package com.example.unitconverter.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -13,7 +13,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,13 +23,16 @@ import androidx.compose.ui.unit.sp
 import com.example.unitconverter.ui.SelectOption
 
 @Composable
-fun UnitConverterScreen(viewModel: UnitConverterViewModel = viewModel()) {
-    var inputValue by viewModel.inputValue
+fun UnitConverterScreen() {
+    val viewModel: UnitConverterViewModel = viewModel(factory = UnitConverterViewModel.Factory)
+    val inputValue by viewModel.inputValue
     val outputValue by viewModel.outputValue
     val inputUnit by viewModel.inputUnit
     val outputUnit by viewModel.outputUnit
     val iExpanded by viewModel.iExpanded
     val oExpanded by viewModel.oExpanded
+    val isError by viewModel.isInputError
+    val errorMsg by viewModel.errorMessage
 
     val customTextStyle = TextStyle(
         fontFamily = FontFamily.Default,
@@ -51,10 +53,7 @@ fun UnitConverterScreen(viewModel: UnitConverterViewModel = viewModel()) {
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = inputValue,
-            onValueChange = {
-                inputValue = it
-                viewModel.convertUnits()
-            },
+            onValueChange = {newValue -> viewModel.onInputValueChange(newValue)},
             label = {
                 Text(text = "Enter Value=")
             })
@@ -79,6 +78,14 @@ fun UnitConverterScreen(viewModel: UnitConverterViewModel = viewModel()) {
                 onSelectUnit = { unit, factor ->
                     viewModel.onSelectOutputUnit(unit, factor)
                 }
+            )
+        }
+        if (isError) {
+            Text(
+                text = errorMsg,
+                style = TextStyle(
+                    color = Color.Red
+                )
             )
         }
         Text(
